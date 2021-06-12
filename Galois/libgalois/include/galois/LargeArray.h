@@ -74,7 +74,7 @@ public:
   };
 
 protected:
-  enum AllocType { Blocked, Local, Interleaved, Floating };
+  enum AllocType { Blocked, Local, Interleaved, Floating, SingleNode };
   void allocate(size_type n, AllocType t) {
     assert(!m_data);
     m_size = n;
@@ -96,6 +96,10 @@ protected:
     case Floating:
       galois::gDebug("Floating-alloc'd");
       m_realdata = substrate::largeMallocFloating(n * sizeof(T));
+      break;
+    case SingleNode:
+      galois::gDebug("SingleNode-allocated")
+      m_realdata = substrate::largeMallocSingle(n * sizeof(T));
       break;
     };
     m_data = reinterpret_cast<T*>(m_realdata.get());
